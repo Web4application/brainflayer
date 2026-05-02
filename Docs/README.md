@@ -52,17 +52,19 @@ Usage
 ### Basic
 
 Precompute the bloom filter:
-
+```cs
 `hex2blf example.hex example.blf`
-
+```
 Run Brainflayer against it:
 
-`brainflayer -v -b example.blf -i phraselist.txt`
+```blf
+brainflayer -v -b example.blf -i phraselist.txt'
+```
 
 or
-
+```c
 `your_generator | brainflayer -v -b example.blf`
-
+```
 ### Advanced
 
 Brainflayer's design is heavily influenced by [Unix philosophy](https://en.wikipedia.org/wiki/Unix_philosophy).
@@ -79,25 +81,26 @@ run two copies per physical core. Also worth noting is that brainflayer mmaps
 its data files in shared memory, so additional brainflayer processes do not
 use up that much additional RAM.
 
-While not strictly required, it is *highly* recommended to use the following
+While not strictly required, it is ***highly*** recommended to use the following
 options:
 
-* `-m FILE` Load the ecmult table from `FILE` (generated with `ecmtabgen`)
+* `-m FILE` Load the ecmult table from `FILE` (generated with ```ecmtabgen```)
             rather than computing it on startup. This will allow multiple
             brainflayer processes to share the same table in memory, and
             signifigantly reduce startup time when using a large table.
 
 * `-f FILE` Verify check bloom filter matches against `FILE`, a list of all
             hash160s generated with
-            `sort -u example.hex | xxd -r -p > example.bin`
+  
+            ```sort -u example.hex | xxd -r -p > example.bin```
             Enough addresses exist on the Bitcoin network to cause false
             positives in the bloom filter, this option will suppress them.
 
 Brainflayer supports a few other types of input via the `-t` option:
 
-* `-t keccak` passphrases to be hashed with keccak256 (some ethereum tools)
+* ```-t keccak``` passphrases to be hashed with keccak256 (some ethereum tools)
 
-* `-t priv` raw private keys - this can be used to support arbitrary
+* ```-t priv``` raw private keys - this can be used to support arbitrary
             deterministic wallet schemes via an external program. Any trailing
             data after the hex encoded private key will be included in
             brainflayer's output as well, for reference. See also the `-I`
@@ -112,15 +115,15 @@ Brainflayer supports a few other types of input via the `-t` option:
             on CPU, however the parameter choices make it a great target for GPUs
             and FPGAs.
 
-* `-t rush` passwords for password-protected rushwallets - pass the fragment (the
+* ```-t rush``` passwords for password-protected rushwallets - pass the fragment (the
             part of the url after the #) using `-r`. Almost all wrong passwords
             will be rejected even without a bloom filter.
 
 Address types can be specified with the `-c` option:
 
-* `-c u` uncompressed addresses
+* ```-c u``` uncompressed addresses
 
-* `-c c` compressed addresses
+* ```-c c``` compressed addresses
 
 * `-c e` ethereum addresses
 
@@ -130,9 +133,7 @@ It's possible to combine two or more of these, e.g. the default is `-c uc`.
 
 An incremental private key brute force mode is available for fans of
 [directory.io](http://www.directory.io/), try
-
-`brainflayer -v -I 0000000000000000000000000000000000000000000000000000000000000001 -b example.blf`
-
+```brainflayer -v -I 0000000000000000000000000000000000000000000000000000000000000001 -b example.blf```
 See the output of `brainflayer -h` for more detailed usage info.
 
 Also included is `blfchk` - you can pipe it hex encoded hash160 to check a
@@ -150,7 +151,7 @@ about a build failure in libsecp256k1 I will close it.
 
 Dependencies should install with
 
-```
+```shell
 apt install build-essential libgmp-dev libssl-dev
 ```
 
@@ -166,7 +167,7 @@ Authors
 -------
 
 The bulk of Brainflayer was written by Ryan Castellucci. Nicolas Courtois and
-Guangyan Song contributed the code in `ec_pubkey_fast.c` which more than
+Guangyan Song contributed the code in ```ec_pubkey_fast.c``` which more than
 doubles the speed of public key computations compared with the stock secp256k1
 library from Bitcoin. This code uses a much larger table for ec multiplication
 and optimized routines for ec addition and doubling.
